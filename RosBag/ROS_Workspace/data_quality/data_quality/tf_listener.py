@@ -4,6 +4,7 @@ import tf2_ros
 from tf2_msgs.msg import TFMessage
 import csv
 import statistics
+import os
 
 class TFListenerNode(Node):
     def __init__(self):
@@ -22,10 +23,12 @@ class TFListenerNode(Node):
         )
 
         # Initialize counters and lists for data tracking
+        folder_path = '../analysis/bag_101024/'
+        os.makedirs(folder_path, exist_ok=True)
         self.data = {
-            'marker_0': {'times': [], 'last_time': None, 'csv_file': '../analysis/marker_0.csv', 'trans': [], 'rot': []},
-            'marker_111': {'times': [], 'last_time': None, 'csv_file': '../analysis/marker_111.csv', 'trans': [], 'rot': []},
-            'marker_222': {'times': [], 'last_time': None, 'csv_file': '../analysis/marker_222.csv', 'trans': [], 'rot': []}
+            'marker_0': {'times': [], 'last_time': None, 'csv_file': f'{folder_path}marker_0.csv', 'trans': [], 'rot': []},
+            'marker_111': {'times': [], 'last_time': None, 'csv_file': f'{folder_path}marker_111.csv', 'trans': [], 'rot': []},
+            'marker_222': {'times': [], 'last_time': None, 'csv_file': f'{folder_path}marker_222.csv', 'trans': [], 'rot': []}
         }
         self.counter = {'marker_0': 0, 'marker_111': 0, 'marker_222': 0, 'total': 0}
         self.moving_average_window = 10  # Set how many messages to average

@@ -33,8 +33,8 @@ def plot_line(ax, x, y, label, xlabel=None, ylabel=None, title=None, linestyle='
 
 
 # Function to plot marker metadata
-def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label, category_names, size_of_buffer=4,
-                plot_values=True, plot_filtered=True):
+def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label, category_names, ros_bag_path='',
+                size_of_buffer=4, plot_values=True, plot_filtered=True):
     if data is None:
         return
 
@@ -49,19 +49,20 @@ def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label
               title=f'{category_names[1]} {label} (Buffer Size={size_of_buffer})', linestyle='--', color='g')
 
     plt.tight_layout()
-    os.makedirs(f'out/{marker_id}', exist_ok=True)
+    os.makedirs(f'{ros_bag_path}/out/{marker_id}', exist_ok=True)
 
-    plt.savefig(f'out/{marker_id}/{label}.png')
+    plt.savefig(f'{ros_bag_path}/out/{marker_id}/{label}.png')
     plt.show()
 
 
 # Main function to read the CSVs and generate the plots
 def main():
+    ros_bag_path = 'bag_101024/'
     markers = {'marker_0': 'marker_0.csv', 'marker_111': 'marker_111.csv', 'marker_222': 'marker_222.csv'}
     categories = 2
 
     for marker_id, csv_file in markers.items():
-        data = read_csv_data(csv_file)
+        data = read_csv_data(ros_bag_path+csv_file)
 
         if data is None:
             continue
@@ -73,7 +74,7 @@ def main():
 
         fig, (ax_value, ax_moving_avg) = plt.subplots(categories, 1, figsize=(10, 5))
         plot_marker(marker_id, data, ax_value, ax_moving_avg, data[csv_list[1]], data[csv_list[2]],"Time Between Messages (s)",
-                    ['Time Between Messages (s)', 'Moving Average'], 10)
+                    ['Time Between Messages (s)', 'Moving Average'], ros_bag_path, 10)
 
         for i in range(3, len(csv_list), categories):  # Step by 2 to access sets of value, filtered_value
             value = data[csv_list[i]]  # Value column
@@ -82,7 +83,7 @@ def main():
 
             fig, (ax_value, ax_filtered) = plt.subplots(categories, 1, figsize=(10, 5))
             plot_marker(marker_id, data, ax_value, ax_filtered, value, filtered_value, label,
-                        ['Time Between Messages (s)', 'Median Filtered'])
+                        ['Time Between Messages (s)', 'Median Filtered'], ros_bag_path)
 
 
 

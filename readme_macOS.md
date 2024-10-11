@@ -26,5 +26,18 @@ mamba activate ros_env
 ros2 bag play bag_011024
 ```
 
+``` bash
+cd
+cd Documents/GitKraken/DIGIT_works/RosBag/
+mamba activate ros_env
+ros2 bag play bag_101024
+```
 
+``` bash
+cd
+cd Documents/GitKraken/DIGIT_works/RosBag/
+mamba activate ros_env
+ros2 run tf2_tools view_frames -o frames
+```
 
+ros2 run tf2_ros tf2_echo marker_111 marker_0
