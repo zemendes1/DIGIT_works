@@ -23,16 +23,10 @@ ros2 run data_quality tf_listener
 cd
 cd Documents/GitKraken/DIGIT_works/RosBag/
 mamba activate ros_env
-ros2 bag play bag_011024
+ros2 bag play bag_name
 ```
 
-``` bash
-cd
-cd Documents/GitKraken/DIGIT_works/RosBag/
-mamba activate ros_env
-ros2 bag play bag_101024
-```
-
+### To check the frames and their transformations
 ``` bash
 cd
 cd Documents/GitKraken/DIGIT_works/RosBag/
@@ -40,4 +34,7 @@ mamba activate ros_env
 ros2 run tf2_tools view_frames -o frames
 ```
 
+### Example Checking the transformation between two frames
+``` bash
 ros2 run tf2_ros tf2_echo marker_111 marker_0
+```
