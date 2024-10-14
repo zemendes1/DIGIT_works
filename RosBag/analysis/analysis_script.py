@@ -57,8 +57,10 @@ def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label
 
 # Main function to read the CSVs and generate the plots
 def main():
-    ros_bag_path = 'bag_101024/'
-    markers = {'marker_0': 'marker_0.csv', 'marker_111': 'marker_111.csv', 'marker_222': 'marker_222.csv'}
+    ros_bag_path = 'bag_111024/'
+    markers = {'marker_111_to_marker_0': 'marker_111_to_marker_0.csv', 'marker_222_to_marker_0': 'marker_222_to_marker_0.csv'}
+    # markers = {'marker_0': 'marker_0.csv', 'marker_111': 'marker_111.csv', 'marker_222': 'marker_222.csv'}
+
     categories = 2
 
     for marker_id, csv_file in markers.items():
@@ -68,7 +70,6 @@ def main():
             continue
 
         # Define the triplet of columns for value, moving average, and standard deviation
-            # Define the triplet of columns for value, moving average, and standard deviation
         labels = ['Translation X (m)', 'Translation Y (m)', 'Translation Z (m)',
                       'Rotation X', 'Rotation Y', 'Rotation Z', 'Rotation W']
 

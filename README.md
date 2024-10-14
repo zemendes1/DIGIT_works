@@ -15,7 +15,7 @@ cd Documents/GitKraken/DIGIT_works/RosBag/ROS_Workspace/
 mamba activate ros_env
 colcon build
 source install/local_setup.sh 
-ros2 run data_quality tf_listener
+ros2 run data_quality tf_listener.launch.py bag_name:=bag_name
 ```
 
 ### To run the quality of service analyzer package between marker_111, marker_222 and marker_0
@@ -25,7 +25,7 @@ cd Documents/GitKraken/DIGIT_works/RosBag/ROS_Workspace/
 mamba activate ros_env
 colcon build
 source install/local_setup.sh 
-ros2 run data_quality tf_listener_marker_0
+ros2 launch data_quality tf_listener_marker_0.launch.py bag_name:=bag_name
 ```
 
 ### Next, we will play back a recorded ROS bag file to simulate real-time data.

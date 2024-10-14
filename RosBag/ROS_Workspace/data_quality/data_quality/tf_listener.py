@@ -10,6 +10,11 @@ class TFListenerNode(Node):
     def __init__(self):
         super().__init__('tf_listener_node')
 
+        # Get the bag folder path from parameters
+        self.declare_parameter('bag_name', '../analysis/default/')
+        folder_path = "../analysis/" + self.get_parameter('bag_name').value
+        os.makedirs(folder_path, exist_ok=True)
+
         # Create a TF2 buffer and listener
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
@@ -22,13 +27,10 @@ class TFListenerNode(Node):
             10
         )
 
-        # Initialize counters and lists for data tracking
-        folder_path = '../analysis/bag_101024/'
-        os.makedirs(folder_path, exist_ok=True)
         self.data = {
-            'marker_0': {'times': [], 'last_time': None, 'csv_file': f'{folder_path}marker_0.csv', 'trans': [], 'rot': []},
-            'marker_111': {'times': [], 'last_time': None, 'csv_file': f'{folder_path}marker_111.csv', 'trans': [], 'rot': []},
-            'marker_222': {'times': [], 'last_time': None, 'csv_file': f'{folder_path}marker_222.csv', 'trans': [], 'rot': []}
+            'marker_0': {'times': [], 'last_time': None, 'csv_file': f'marker_0.csv', 'trans': [], 'rot': []},
+            'marker_111': {'times': [], 'last_time': None, 'csv_file': f'marker_111.csv', 'trans': [], 'rot': []},
+            'marker_222': {'times': [], 'last_time': None, 'csv_file': f'marker_222.csv', 'trans': [], 'rot': []}
         }
         self.counter = {'marker_0': 0, 'marker_111': 0, 'marker_222': 0, 'total': 0}
         self.moving_average_window = 10  # Set how many messages to average

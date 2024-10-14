@@ -1,6 +1,10 @@
 from setuptools import find_packages, setup
+import os
+from glob import glob
+
 
 package_name = 'data_quality'
+share_path = os.path.join('share', package_name)
 
 setup(
     name=package_name,
@@ -10,6 +14,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join(share_path, 'launch_files'), glob('launch_files/*.launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -21,6 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
             'tf_listener = data_quality.tf_listener:main',
+            'tf_listener_marker_0 = data_quality.tf_listener_marker_0:main',
         ],
     },
 )
