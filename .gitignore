@@ -5,8 +5,6 @@
 log/
 build/
 install/
-RosBag/bag_101024/
-RosBag/bag_241024/
 *.png
-
 *.csv
+*.db3
