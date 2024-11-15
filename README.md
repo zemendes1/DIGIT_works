@@ -39,6 +39,7 @@ ros2 run tf2_tools view_frames -o frames
 ros2 run tf2_ros tf2_echo marker_111 marker_0
 ```
 
+### Watch the camera feed
 ``` bash
 mamba activate ros_env
 ros2 run rqt_image_view rqt_image_view --ros-args --remap image:=/anafi/camera/image
