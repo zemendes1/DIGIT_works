@@ -26,7 +26,6 @@ class TFListenerNode(Node):
                                 'trans': [], 'rot': [], 'last_transform': None}
         }
         self.counter = {'marker_111_to_0': 0, 'marker_222_to_0': 0, 'total': 0}
-        self.moving_average_window = 10
         self.filter_buffer_size = 4
 
         # Ensure CSV files exist and are initialized
@@ -78,32 +77,31 @@ class TFListenerNode(Node):
             # Get the time difference for marker_xxx_to_0
             current_time = self.get_clock().now().nanoseconds / 1e9
             last_time = self.data[filename]['last_time']
+
             if last_time is not None:
                 time_diff = current_time - last_time
                 self.data[filename]['times'].append(time_diff)
-
-                # Keep only the last X messages
-                if len(self.data[filename]['times']) > self.moving_average_window:
-                    self.data[filename]['times'].pop(0)
-
-                moving_avg_time_between_messages = sum(self.data[filename]['times']) / len(self.data[filename]['times'])
-
-                # Keep rolling windows for translation and rotation
-                self.update_window(self.data[filename]['trans'],
-                                   [translation.x, translation.y, translation.z])
-                self.update_window(self.data[filename]['rot'],
-                                   [rotation.x, rotation.y, rotation.z, rotation.w])
-
-                # Compute median filter for translations and rotations
-                filtered_trans = [statistics.median(x) for x in zip(*self.data[filename]['trans'])]
-                filtered_rot = [statistics.median(x) for x in zip(*self.data[filename]['rot'])]
 
                 # Check if the transform is unique (different from the last logged one)
                 current_transform = [translation.x, translation.y, translation.z,
                                      rotation.x, rotation.y, rotation.z, rotation.w]
                 last_transform = self.data[filename]['last_transform']
+
                 if last_transform is None or current_transform != last_transform:
-                    self.get_logger().info(str(current_transform))
+                    # self.get_logger().info(str(current_transform))
+
+                    # Keep rolling windows for translation and rotation
+                    self.update_window(self.data[filename]['trans'],
+                                       [translation.x, translation.y, translation.z])
+                    self.update_window(self.data[filename]['rot'],
+                                       [rotation.x, rotation.y, rotation.z, rotation.w])
+
+                    moving_avg_time_between_messages = sum(self.data[filename]['times']) / len(self.data[filename]['times'])
+
+                    # Compute median filter for translations and rotations
+                    filtered_trans = [statistics.median(x) for x in zip(*self.data[filename]['trans'])]
+                    filtered_rot = [statistics.median(x) for x in zip(*self.data[filename]['rot'])]
+
                     # Log to CSV if unique
                     self.log_to_csv(filename, time_diff, moving_avg_time_between_messages,
                                     translation, rotation, filtered_trans, filtered_rot)
