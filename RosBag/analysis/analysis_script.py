@@ -35,6 +35,8 @@ def plot_line(ax, x, y, label, xlabel=None, ylabel=None, title=None, linestyle='
 # Function to plot marker metadata
 def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label, category_names, ros_bag_path='',
                 size_of_buffer=4, plot_values=True, plot_filtered=True):
+    y_min, y_max = float('inf'), float('-inf')
+
     if data is None:
         return
 
@@ -48,6 +50,11 @@ def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label
               f'Marker {marker_id}', ylabel='',
               title=f'{category_names[1]} {label} (Buffer Size={size_of_buffer})', linestyle='--', color='g')
 
+    y_min = min(y_min, min(value))
+    y_max = max(y_max, max(value))
+    ax_value.set_ylim(y_min-abs(y_min*0.1), y_max+abs(y_max*0.1))
+    ax_filtered.set_ylim(y_min-abs(y_min*0.1), y_max+abs(y_max*0.1))
+
     plt.tight_layout()
     os.makedirs(f'{ros_bag_path}/out/{marker_id}', exist_ok=True)
 
@@ -57,7 +64,7 @@ def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label
 
 # Main function to read the CSVs and generate the plots
 def main():
-    ros_bag_path = 'bag_111024/'
+    ros_bag_path = 'bag_241024_drone/'
     markers = {'marker_111_to_marker_0': 'marker_111_to_marker_0.csv', 'marker_222_to_marker_0': 'marker_222_to_marker_0.csv'}
     # markers = {'marker_0': 'marker_0.csv', 'marker_111': 'marker_111.csv', 'marker_222': 'marker_222.csv'}
 
