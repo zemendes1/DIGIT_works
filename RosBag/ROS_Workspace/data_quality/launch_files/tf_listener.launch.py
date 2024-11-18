@@ -7,11 +7,8 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='data_quality',
-            executable='tf_listener_marker_0',
-            name='tf_listener_marker_0',
+            executable='tf_listener',
+            name='tf_listener',
             output='screen',
-            parameters=[{
-                'bag_name': LaunchConfiguration('bag_name'),
-            }],
         ),
     ])

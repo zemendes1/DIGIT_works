@@ -25,7 +25,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'tf_listener_marker_0 = data_quality.tf_listener_marker_0:main',
+            'tf_listener = data_quality.tf_listener:main',
         ],
     },
 )

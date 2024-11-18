@@ -9,11 +9,6 @@ class TFListenerNode(Node):
     def __init__(self):
         super().__init__('tf_listener_node')
 
-        # Get the bag folder path from parameters
-        self.declare_parameter('bag_name', '../analysis/default/')
-        folder_path = "../analysis/" + self.get_parameter('bag_name').value
-        os.makedirs(folder_path, exist_ok=True)
-
         # Create a TF2 buffer and listener
         self.tf_buffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
@@ -23,9 +18,13 @@ class TFListenerNode(Node):
             'marker_111_to_0': {'times': [], 'last_time': None, 'csv_file': f'marker_111_to_marker_0.csv',
                              'trans': [], 'rot': [], 'last_transform': None},
             'marker_222_to_0': {'times': [], 'last_time': None, 'csv_file': f'marker_222_to_marker_0.csv',
+                                'trans': [], 'rot': [], 'last_transform': None},
+            'base_link1_to_world': {'times': [], 'last_time': None, 'csv_file': f'base_link1_to_world.csv',
+                                'trans': [], 'rot': [], 'last_transform': None},
+            'base_link2_to_world': {'times': [], 'last_time': None, 'csv_file': f'base_link2_to_world.csv',
                                 'trans': [], 'rot': [], 'last_transform': None}
         }
-        self.counter = {'marker_111_to_0': 0, 'marker_222_to_0': 0, 'total': 0}
+        self.counter = {'marker_111_to_0': 0, 'marker_222_to_0': 0, 'base_link1_to_world': 0, 'base_link2_to_world': 0, 'total': 0}
         self.filter_buffer_size = 4
 
         # Ensure CSV files exist and are initialized
@@ -43,8 +42,10 @@ class TFListenerNode(Node):
                                  'Rotation_w', 'Filtered Rotation_w'])
 
         # Set timers to periodically lookup and process transforms
-        self.timer_111 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_111"))
-        self.timer_222 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_222"))
+        self.timer_marker111 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_111"))
+        self.timer_marker222 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_222"))
+        self.timer_base_link1 = self.create_timer(0.01, lambda: self.lookup_and_process("base_link1"))
+        self.timer_base_link2 = self.create_timer(0.01, lambda: self.lookup_and_process("base_link2"))
 
     def update_window(self, window, new_data):
         """Helper function to maintain a rolling window of values."""
@@ -67,10 +68,17 @@ class TFListenerNode(Node):
                              rotation.w, filtered_rot[3]])
 
     def lookup_and_process(self, name_of_marker):
-        filename = f'{name_of_marker}_to_0'
+        if name_of_marker == "marker_111" or name_of_marker == "marker_222":
+            filename = f'{name_of_marker}_to_0'
+        elif name_of_marker == "base_link1" or name_of_marker == "base_link2":
+            filename = f'{name_of_marker}_to_world'
+
         try:
-            # Lookup transform between marker_xxx and marker_0
-            trans = self.tf_buffer.lookup_transform('marker_0', name_of_marker, rclpy.time.Time())
+            # Lookup transform between marker_xxx and marker_0 or between base_link_xxx and world
+            if name_of_marker == "marker_111" or name_of_marker == "marker_222":
+                trans = self.tf_buffer.lookup_transform('marker_0', name_of_marker, rclpy.time.Time())
+            elif name_of_marker == "base_link1" or name_of_marker == "base_link2":
+                trans = self.tf_buffer.lookup_transform('world', name_of_marker, rclpy.time.Time())
             translation = trans.transform.translation
             rotation = trans.transform.rotation
 
