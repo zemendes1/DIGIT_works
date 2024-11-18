@@ -5,5 +5,4 @@
 log/
 build/
 install/
-*.csv
 *.db3
