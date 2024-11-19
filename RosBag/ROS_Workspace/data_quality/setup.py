@@ -26,6 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
             'tf_listener = data_quality.tf_listener:main',
+            'tf_listener_direct = data_quality.tf_listener_direct:main',
         ],
     },
 )
