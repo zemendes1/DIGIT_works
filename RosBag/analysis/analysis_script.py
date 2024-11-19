@@ -25,7 +25,7 @@ def read_csv_data(csv_file):
 # Function to plot a line graph
 def plot_line(ax, x, y, label, xlabel=None, ylabel=None, title=None, linestyle='-', marker='o', color=None, grid=True):
     ax.plot(x, y, label=label, linestyle=linestyle, marker=marker, color=color)
-    ax.set_xlabel(xlabel if xlabel else 'Time Stamp')
+    ax.set_xlabel(xlabel if xlabel else 'Time Stamp (Epoch)')
     ax.set_ylabel(ylabel)
     ax.set_title(title)
     ax.legend()
