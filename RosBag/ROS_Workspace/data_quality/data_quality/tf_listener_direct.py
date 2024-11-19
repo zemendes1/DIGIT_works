@@ -39,9 +39,9 @@ class TFListenerNode(Node):
 
         # Set timers to periodically lookup and process transforms
         self.timer_marker111 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_111"))
-        # self.timer_marker222 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_222"))
+        self.timer_marker222 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_222"))
         self.timer_base_link1 = self.create_timer(0.01, lambda: self.lookup_and_process("base_link1"))
-        # self.timer_base_link2 = self.create_timer(0.01, lambda: self.lookup_and_process("base_link2"))
+        self.timer_base_link2 = self.create_timer(0.01, lambda: self.lookup_and_process("base_link2"))
 
     def update_window(self, window, new_data):
         """Helper function to maintain a rolling window of values."""
