@@ -65,9 +65,9 @@ class TFListenerNode(Node):
 
     def lookup_and_process(self, name_of_marker):
         if name_of_marker == "marker_111" or name_of_marker == "marker_222":
-            filename = f'{name_of_marker}_to_marker_222'
+            filename = f'marker_111_to_marker_222'
         elif name_of_marker == "base_link1" or name_of_marker == "base_link2":
-            filename = f'{name_of_marker}_to_base_link2'
+            filename = f'base_link1_to_base_link2'
 
         try:
             # Lookup transform between marker_xxx and marker_0 or between base_link_xxx and world
