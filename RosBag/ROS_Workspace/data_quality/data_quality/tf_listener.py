@@ -31,7 +31,7 @@ class TFListenerNode(Node):
         for marker_id, data in self.data.items():
             with open(data['csv_file'], 'w', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow(['Transformation Number',
+                writer.writerow(['Time Stamp',
                                  'Time Between Messages', 'Moving Average Time Between Messages',
                                  'Translation_x', 'Filtered Translation_x',
                                  'Translation_y', 'Filtered Translation_y',
@@ -53,12 +53,12 @@ class TFListenerNode(Node):
         if len(window) > self.filter_buffer_size:
             window.pop(0)
 
-    def log_to_csv(self, marker_id, time_diff, moving_avg_time_between_messages,
+    def log_to_csv(self, marker_id, time_stamp, time_diff, moving_avg_time_between_messages,
                    translation, rotation, filtered_trans, filtered_rot):
         csv_file = self.data[marker_id]['csv_file']
         with open(csv_file, 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([self.counter[marker_id], time_diff, moving_avg_time_between_messages,
+            writer.writerow([time_stamp, time_diff, moving_avg_time_between_messages,
                              translation.x, filtered_trans[0],
                              translation.y, filtered_trans[1],
                              translation.z, filtered_trans[2],
@@ -83,7 +83,7 @@ class TFListenerNode(Node):
             rotation = trans.transform.rotation
 
             # Get the time difference for marker_xxx_to_0
-            current_time = self.get_clock().now().nanoseconds / 1e9
+            current_time = int(trans.header.stamp.sec) +  int(trans.header.stamp.nanosec) / 1e9
             last_time = self.data[filename]['last_time']
 
             if last_time is not None:
@@ -111,7 +111,8 @@ class TFListenerNode(Node):
                     filtered_rot = [statistics.median(x) for x in zip(*self.data[filename]['rot'])]
 
                     # Log to CSV if unique
-                    self.log_to_csv(filename, time_diff, moving_avg_time_between_messages,
+                    self.log_to_csv(filename, f'{trans.header.stamp.sec}.{trans.header.stamp.nanosec}', time_diff,
+                                    moving_avg_time_between_messages,
                                     translation, rotation, filtered_trans, filtered_rot)
                     self.counter[filename] += 1
                     self.counter['total'] += 1
