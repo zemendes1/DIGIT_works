@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
-csv_list = ['Transformation Number',
+csv_list = ['Time Stamp',
              'Time Between Messages', 'Moving Average Time Between Messages',
              'Translation_x', 'Filtered Translation_x',
              'Translation_y', 'Filtered Translation_y',
@@ -25,7 +25,7 @@ def read_csv_data(csv_file):
 # Function to plot a line graph
 def plot_line(ax, x, y, label, xlabel=None, ylabel=None, title=None, linestyle='-', marker='o', color=None, grid=True):
     ax.plot(x, y, label=label, linestyle=linestyle, marker=marker, color=color)
-    ax.set_xlabel(xlabel if xlabel else 'Transformation Number')
+    ax.set_xlabel(xlabel if xlabel else 'Time Stamp')
     ax.set_ylabel(ylabel)
     ax.set_title(title)
     ax.legend()
@@ -41,12 +41,12 @@ def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label
         return
 
     if plot_values:
-        plot_line(ax_value, data['Transformation Number'], y=value,
+        plot_line(ax_value, data['Time Stamp'], y=value,
                   label = f'Marker {marker_id}', ylabel='',
                   title=f'{label}', color='r')
 
     if plot_filtered:
-        plot_line(ax_filtered, data['Transformation Number'], moving_avg,
+        plot_line(ax_filtered, data['Time Stamp'], moving_avg,
               f'Marker {marker_id}', ylabel='',
               title=f'{category_names[1]} {label} (Buffer Size={size_of_buffer})', linestyle='--', color='g')
 
@@ -65,9 +65,9 @@ def plot_marker(marker_id, data, ax_value, ax_filtered, value, moving_avg, label
 
 # Main function to read the CSVs and generate the plots
 def main():
-    ros_bag_path = 'bag_241024_robot/'
-    # markers = {'marker_111_to_marker_0': 'marker_111_to_marker_0.csv', 'marker_222_to_marker_0': 'marker_222_to_marker_0.csv'}
-    markers = {'base_link1_to_world': 'base_link1_to_world.csv', 'base_link2_to_world': 'base_link2_to_world.csv'}
+    ros_bag_path = 'bag_241024_drone/'
+    markers = {'marker_111_to_marker_0': 'marker_111_to_marker_0.csv', 'marker_222_to_marker_0': 'marker_222_to_marker_0.csv', 'marker_111_to_marker_222': 'marker_111_to_marker_222.csv'}
+    # markers = {'base_link1_to_world': 'base_link1_to_world.csv', 'base_link2_to_world': 'base_link2_to_world.csv', 'base_link1_to_base_link2': 'base_link1_to_base_link2.csv'}
 
     categories = 2
 
