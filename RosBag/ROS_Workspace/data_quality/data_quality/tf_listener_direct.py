@@ -15,12 +15,12 @@ class TFListenerNode(Node):
 
         # Initialize counters and lists for data tracking
         self.data = {
-            'marker_111_to_marker_222': {'times': [], 'last_time': None, 'csv_file': f'marker_111_to_marker_222.csv',
+            'robot_A_to_robot_B': {'times': [], 'last_time': None, 'csv_file': f'robot_A_to_robot_B.csv',
                                 'trans': [], 'rot': [], 'last_transform': None},
             'base_link1_to_base_link2': {'times': [], 'last_time': None, 'csv_file': f'base_link1_to_base_link2.csv',
                                          'trans': [], 'rot': [], 'last_transform': None},
         }
-        self.counter = {'marker_111_to_marker_222':0, 'base_link1_to_base_link2':0, 'total': 0}
+        self.counter = {'robot_A_to_robot_B':0, 'base_link1_to_base_link2':0, 'total': 0}
         self.filter_buffer_size = 4
 
         # Ensure CSV files exist and are initialized
@@ -38,8 +38,8 @@ class TFListenerNode(Node):
                                  'Rotation_w', 'Filtered Rotation_w'])
 
         # Set timers to periodically lookup and process transforms
-        self.timer_marker111 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_111"))
-        self.timer_marker222 = self.create_timer(0.01, lambda: self.lookup_and_process("marker_222"))
+        self.timer_robot_A = self.create_timer(0.01, lambda: self.lookup_and_process("robot_A"))
+        self.timer_robot_B = self.create_timer(0.01, lambda: self.lookup_and_process("robot_B"))
         self.timer_base_link1 = self.create_timer(0.01, lambda: self.lookup_and_process("base_link1"))
         self.timer_base_link2 = self.create_timer(0.01, lambda: self.lookup_and_process("base_link2"))
 
@@ -64,15 +64,15 @@ class TFListenerNode(Node):
                              rotation.w, filtered_rot[3]])
 
     def lookup_and_process(self, name_of_marker):
-        if name_of_marker == "marker_111" or name_of_marker == "marker_222":
-            filename = f'marker_111_to_marker_222'
+        if name_of_marker == "robot_A" or name_of_marker == "robot_B":
+            filename = f'robot_A_to_robot_B'
         elif name_of_marker == "base_link1" or name_of_marker == "base_link2":
             filename = f'base_link1_to_base_link2'
 
         try:
             # Lookup transform between marker_xxx and marker_0 or between base_link_xxx and world
-            if name_of_marker == "marker_111"  or name_of_marker == "marker_222":
-                trans = self.tf_buffer.lookup_transform('marker_111', 'marker_222', rclpy.time.Time())
+            if name_of_marker == "robot_A"  or name_of_marker == "robot_B":
+                trans = self.tf_buffer.lookup_transform('robot_A', 'robot_B', rclpy.time.Time())
 
             elif name_of_marker == "base_link1" or name_of_marker == "base_link2":
                 trans = self.tf_buffer.lookup_transform('base_link1', 'base_link2', rclpy.time.Time())
